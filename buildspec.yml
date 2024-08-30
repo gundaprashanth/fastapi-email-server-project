@@ -5,7 +5,7 @@ phases:
     commands:
       - echo Logging in to DockerHub...
       - docker login -u gundaprashanth222@gmail.com -p Welcome@2216
-      - REPOSITORY_URI=$ecr_uri
+      - REPOSITORY_URI=011528265574.dkr.ecr.ap-south-1.amazonaws.com/prashanth
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - IMAGE_TAG=${COMMIT_HASH:=latest}
   build:
@@ -13,7 +13,7 @@ phases:
       - echo Build started on `date`
       - echo Building the Docker image...
       - docker build -t 011528265574.dkr.ecr.ap-south-1.amazonaws.com/prashanth:latest .
-      - docker tag 011528265574.dkr.ecr.ap-south-1.amazonaws.com/prashanth:latest 011528265574.dkr.ecr.ap-south-1.amazonaws.com/prashanth:sai
+      - docker tag 011528265574.dkr.ecr.ap-south-1.amazonaws.com/prashanth:latest 011528265574.dkr.ecr.ap-south-1.amazonaws.com/prashanth:$IMAGE_TAG
   post_build:
     commands:
       - echo Build completed on `date`
@@ -22,8 +22,8 @@ phases:
       - aws ecr get-login-password --region region | docker login --username AWS --password-stdin aws_account_id.dkr.ecr.region.amazonaws.com
       - echo Pushing the Docker images...
       - docker push 011528265574.dkr.ecr.ap-south-1.amazonaws.com/prashanth:latest
-      - docker push 011528265574.dkr.ecr.ap-south-1.amazonaws.com/prashanth:sai
+      - docker push 011528265574.dkr.ecr.ap-south-1.amazonaws.com/prashanth:$IMAGE_TAG
       - echo Writing image definitions file...
-      - printf '[{"name":"'$ecs_container_name'","imageUri":"%s"}]' 011528265574.dkr.ecr.ap-south-1.amazonaws.com/prashanth:sai > imagedefinitions.json
+      - printf '[{"name":"'$ecs_container_name'","imageUri":"%s"}]' 011528265574.dkr.ecr.ap-south-1.amazonaws.com/prashanth:$IMAGE_TAG > imagedefinitions.json
 artifacts:
     files: imagedefinitions.json
