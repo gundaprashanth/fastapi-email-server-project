@@ -12,8 +12,8 @@ phases:
     commands:
       - echo Build started on `date`
       - echo Building the Docker image...
-      - docker build -t 011528265574.dkr.ecr.ap-south-1.amazonaws.com/prashanth .
-      - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
+      - docker build -t 011528265574.dkr.ecr.ap-south-1.amazonaws.com/prashanth:latest .
+      - docker tag 011528265574.dkr.ecr.ap-south-1.amazonaws.com/prashanth:latest 011528265574.dkr.ecr.ap-south-1.amazonaws.com/prashanth:sai
   post_build:
     commands:
       - echo Build completed on `date`
@@ -21,9 +21,9 @@ phases:
       - aws --version
       - aws ecr get-login-password --region region | docker login --username AWS --password-stdin aws_account_id.dkr.ecr.region.amazonaws.com
       - echo Pushing the Docker images...
-      - docker push $REPOSITORY_URI:latest
-      - docker push $REPOSITORY_URI:$IMAGE_TAG
+      - docker push 011528265574.dkr.ecr.ap-south-1.amazonaws.com/prashanth:latest
+      - docker push 011528265574.dkr.ecr.ap-south-1.amazonaws.com/prashanth:sai
       - echo Writing image definitions file...
-      - printf '[{"name":"'$ecs_container_name'","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+      - printf '[{"name":"'$ecs_container_name'","imageUri":"%s"}]' 011528265574.dkr.ecr.ap-south-1.amazonaws.com/prashanth:sai > imagedefinitions.json
 artifacts:
     files: imagedefinitions.json
